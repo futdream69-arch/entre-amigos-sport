@@ -29,6 +29,20 @@ header{
     box-shadow:0 2px 10px rgba(0,0,0,0.2);
 }
 
+.logo-container{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.logo-img{
+    width:55px;
+    height:55px;
+    border-radius:50%;
+    object-fit:cover;
+    border:3px solid white;
+}
+
 .logo{
     font-size:30px;
     font-weight:bold;
@@ -222,6 +236,10 @@ footer{
         padding:20px;
     }
 
+    .logo{
+        font-size:22px;
+    }
+
 }
 
 </style>
@@ -231,8 +249,16 @@ footer{
 
 <header>
 
-    <div class="logo">
-        ENTRE_AMIGOS SPORT
+    <div class="logo-container">
+
+        <img 
+        src="https://instagram.fgye1-1.fna.fbcdn.net/v/t51.82787-19/705381665_18073482155316223_846975219160882401_n.jpg?stp=dst-jpg_s150x150_tt6&efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLmRqYW5nby4xMDgwLmMyIn0&_nc_ht=instagram.fgye1-1.fna.fbcdn.net&_nc_cat=107&_nc_oc=Q6cZ2gGhMgLM4IAyvPNZ8AM_QOVeDLrClkifT5f_71s2P_VUPRtaZ6Nnyd9ougm1hQxAUsI3e1OxHukxZI48EZWZRtFd&_nc_ohc=H3P9x8HJvwUQ7kNvwHuQZeB&_nc_gid=zzoMjjth9o4nRt2fFzkpPg&edm=AP4sbd4BAAAA&ccb=7-5&oh=00_Af5Bk0xQVDg94w_tfI5ktDRvvNqlqGUoWKT04gfUrii5xg&oe=6A1AEFBF&_nc_sid=7a9f4b"
+        class="logo-img">
+
+        <div class="logo">
+            ENTRE_AMIGOS SPORT
+        </div>
+
     </div>
 
     <div class="search">
