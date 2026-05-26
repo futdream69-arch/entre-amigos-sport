@@ -12,7 +12,7 @@
     margin:0;
     padding:0;
     box-sizing:border-box;
-    font-family:Arial, Helvetica, sans-serif;
+    font-family:Arial;
 }
 
 body{
@@ -48,30 +48,26 @@ header{
     font-weight:bold;
 }
 
-/* SEARCH */
 .search input{
     width:100%;
     padding:12px;
     border:none;
     border-radius:10px;
-    font-size:16px;
 }
 
 /* PRODUCTOS */
 .productos{
     display:grid;
-    grid-template-columns:repeat(4, 1fr);
+    grid-template-columns:repeat(4,1fr);
     gap:20px;
     padding:20px;
 }
 
-/* CARD */
 .card{
     background:white;
     border-radius:20px;
     overflow:hidden;
     box-shadow:0 4px 12px rgba(0,0,0,0.15);
-    position:relative;
 }
 
 .card img{
@@ -84,14 +80,8 @@ header{
     padding:15px;
 }
 
-.nombre{
-    font-weight:bold;
-}
-
-.precio{
-    color:orange;
-    font-size:20px;
-}
+.nombre{font-weight:bold;}
+.precio{color:orange;font-size:20px;}
 
 .btn{
     width:100%;
@@ -102,42 +92,60 @@ header{
     cursor:pointer;
 }
 
+/* CARRITO */
+#carritoBox{
+position:fixed;
+right:10px;
+bottom:10px;
+background:white;
+padding:15px;
+width:300px;
+border-radius:15px;
+box-shadow:0 0 10px rgba(0,0,0,0.3);
+z-index:99999;
+}
+
+#carritoItems div{
+display:flex;
+gap:10px;
+margin-bottom:10px;
+align-items:center;
+}
+
 /* POPUP */
 .popup{
-    position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    background:rgba(0,0,0,0.7);
-    display:none;
-    justify-content:center;
-    align-items:center;
-    z-index:9999;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.7);
+display:none;
+justify-content:center;
+align-items:center;
+z-index:9999;
 }
 
 .popup-content{
-    background:white;
-    width:90%;
-    max-width:400px;
-    border-radius:20px;
-    padding:25px;
-    text-align:center;
+background:white;
+width:90%;
+max-width:400px;
+border-radius:20px;
+padding:25px;
+text-align:center;
 }
 
 .cerrar{
-    float:right;
-    cursor:pointer;
-    font-size:22px;
+float:right;
+cursor:pointer;
+font-size:22px;
 }
 
-/* RESPONSIVE */
 @media(max-width:1000px){
-    .productos{ grid-template-columns:repeat(2,1fr); }
+.productos{grid-template-columns:repeat(2,1fr);}
 }
-
 @media(max-width:600px){
-    .productos{ grid-template-columns:repeat(1,1fr); }
+.productos{grid-template-columns:1fr;}
 }
 </style>
 </head>
@@ -145,29 +153,47 @@ header{
 <body>
 
 <header>
-    <div class="logo-container">
-        <img src="image_7e4e48.jpg" class="logo-img">
-        <div class="logo">ENTRE_AMIGOS SPORT</div>
-    </div>
+<div class="logo-container">
+<img src="image_7e4e48.jpg" class="logo-img">
+<div class="logo">ENTRE_AMIGOS SPORT</div>
+</div>
 
-    <div class="search">
-        <input type="text" id="buscador" placeholder="Buscar ropa o calzado...">
-    </div>
+<div class="search">
+<input type="text" id="buscador" placeholder="Buscar...">
+</div>
 </header>
 
 <h2 style="margin:20px;">🔥 Productos</h2>
 
 <div class="productos"></div>
 
+<!-- POPUP -->
 <div class="popup" id="popup">
-    <div class="popup-content">
-        <span class="cerrar" onclick="cerrarPopup()">✖</span>
-        <h2 id="productoTitulo"></h2>
-        <p id="productoPrecio"></p>
-        <a id="whatsappBtn" target="_blank">
-            <button class="btn">Comprar</button>
-        </a>
-    </div>
+<div class="popup-content">
+<span class="cerrar" onclick="cerrarPopup()">✖</span>
+<h2 id="productoTitulo"></h2>
+<p id="productoPrecio"></p>
+<a id="whatsappBtn" target="_blank">
+<button class="btn">Comprar</button>
+</a>
+</div>
+</div>
+
+<!-- CARRITO -->
+<div id="carritoBox">
+<h3>🛒 Carrito</h3>
+<div id="carritoItems"></div>
+<p><b>Total: $<span id="total">0</span></b></p>
+
+<button onclick="pedirWhatsApp()" style="
+width:100%;
+padding:10px;
+background:#25D366;
+color:white;
+border:none;
+border-radius:10px;">
+📲 Pedir por WhatsApp
+</button>
 </div>
 
 <script type="module">
@@ -175,95 +201,135 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/fireba
 import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyB2d2UkEVh32zmeAzeJUgFzRh8q23zJWso",
-  authDomain: "entre-amigossssport.firebaseapp.com",
-  projectId: "entre-amigossssport",
-  storageBucket: "entre-amigossssport.firebasestorage.app",
-  messagingSenderId: "73851257939",
-  appId: "1:73851257939:web:35ee80ea77a168eabe32a6"
+apiKey:"AIzaSyB2d2UkEVh32zmeAzeJUgFzRh8q23zJWso",
+authDomain:"entre-amigossssport.firebaseapp.com",
+projectId:"entre-amigossssport",
+storageBucket:"entre-amigossssport.firebasestorage.app",
+messagingSenderId:"73851257939",
+appId:"1:73851257939:web:35ee80ea77a168eabe32a6"
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 let todosLosProductos = [];
+let carrito = [];
 
-/* RENDER */
+/* PRODUCTOS */
 function mostrarProductos(lista){
-    const contenedor = document.querySelector(".productos");
-    contenedor.innerHTML = "";
+let cont = document.querySelector(".productos");
+cont.innerHTML="";
 
-    lista.forEach((p) => {
-        contenedor.innerHTML += `
-        <div class="card">
-            <img src="${p.imagen}">
-            <div class="info">
-                <div class="nombre">${p.nombre}</div>
-                <div class="precio">${p.precio}</div>
-                <button class="btn" onclick="mostrarInfo('${p.nombre}','${p.precio}','${p.imagen}')">
-                    Comprar
-                </button>
-            </div>
-        </div>
-        `;
-    });
+lista.forEach(p=>{
+cont.innerHTML+=`
+<div class="card">
+<img src="${p.imagen}">
+<div class="info">
+<div class="nombre">${p.nombre}</div>
+<div class="precio">${p.precio}</div>
+
+<button class="btn" onclick="agregarCarrito('${p.nombre}','${p.precio}','${p.imagen}')">
+Agregar 🛒
+</button>
+
+</div>
+</div>`;
+});
 }
 
-/* CARGAR */
 async function cargarProductos(){
-    const querySnapshot = await getDocs(collection(db, "productos"));
-
-    todosLosProductos = [];
-
-    querySnapshot.forEach((doc) => {
-        const p = doc.data();
-        todosLosProductos.push({
-            id: doc.id,
-            ...p
-        });
-    });
-
-    mostrarProductos(todosLosProductos);
+const snap = await getDocs(collection(db,"productos"));
+todosLosProductos=[];
+snap.forEach(d=>{
+todosLosProductos.push({id:d.id,...d.data()});
+});
+mostrarProductos(todosLosProductos);
 }
-
 cargarProductos();
 
 /* BUSCADOR */
-const buscador = document.getElementById("buscador");
-
-buscador.addEventListener("input", () => {
-    const texto = buscador.value.toLowerCase();
-
-    const filtrados = todosLosProductos.filter(p =>
-        (p.nombre && p.nombre.toLowerCase().includes(texto)) ||
-        (p.categoria && p.categoria.toLowerCase().includes(texto))
-    );
-
-    mostrarProductos(filtrados);
+document.getElementById("buscador").addEventListener("input",e=>{
+let t=e.target.value.toLowerCase();
+mostrarProductos(todosLosProductos.filter(p=>p.nombre.toLowerCase().includes(t)));
 });
 
-/* POPUP + WHATSAPP PRO */
-window.mostrarInfo = function(nombre, precio, imagen){
-    document.getElementById("popup").style.display = "flex";
-    document.getElementById("productoTitulo").innerHTML = nombre;
-    document.getElementById("productoPrecio").innerHTML = precio;
+/* CARRITO */
+window.agregarCarrito=function(nombre,precio,imagen){
 
-    let mensaje = 
-`Hola 👋 quiero hacer un pedido:
+carrito.push({
+nombre,
+precio:parseFloat(precio.replace(/[^0-9.]/g,"")),
+imagen
+});
 
-🛍️ Producto: ${nombre}
-💰 Precio: ${precio}
-🖼️ Imagen: ${imagen}
-
-¿Está disponible?`;
-
-    let url = "https://wa.me/593991613976?text=" + encodeURIComponent(mensaje);
-
-    document.getElementById("whatsappBtn").href = url;
+mostrarCarrito();
 }
 
-window.cerrarPopup = function(){
-    document.getElementById("popup").style.display = "none";
+window.eliminarItem=function(i){
+carrito.splice(i,1);
+mostrarCarrito();
+}
+
+window.mostrarCarrito=function(){
+
+let cont=document.getElementById("carritoItems");
+let total=0;
+
+cont.innerHTML="";
+
+carrito.forEach((p,i)=>{
+total+=p.precio;
+
+cont.innerHTML+=`
+<div>
+<img src="${p.imagen}" width="40">
+<div style="flex:1">
+<small>${p.nombre}</small><br>
+<b>$${p.precio}</b>
+</div>
+<button onclick="eliminarItem(${i})">❌</button>
+</div>`;
+});
+
+document.getElementById("total").innerText=total.toFixed(2);
+}
+
+/* WHATSAPP */
+window.pedirWhatsApp=function(){
+
+if(carrito.length===0){
+alert("Carrito vacío");
+return;
+}
+
+let msg="Hola 👋 quiero este pedido:\n\n";
+let total=0;
+
+carrito.forEach(p=>{
+msg+=`🛍️ ${p.nombre} - $${p.precio}\n`;
+total+=p.precio;
+});
+
+msg+=`\n💰 TOTAL: $${total.toFixed(2)}\n`;
+
+let url="https://wa.me/593991613976?text="+encodeURIComponent(msg);
+
+window.open(url,"_blank");
+}
+
+/* POPUP */
+window.mostrarInfo=function(nombre,precio,imagen){
+document.getElementById("popup").style.display="flex";
+document.getElementById("productoTitulo").innerText=nombre;
+document.getElementById("productoPrecio").innerText=precio;
+
+let msg=`Hola quiero ${nombre}`;
+document.getElementById("whatsappBtn").href=
+"https://wa.me/593991613976?text="+encodeURIComponent(msg);
+}
+
+window.cerrarPopup=function(){
+document.getElementById("popup").style.display="none";
 }
 </script>
 
