@@ -99,20 +99,18 @@ header{
     transform:scale(1.05);
 }
 
-/* PRODUCTOS */
-
-.section-title{
-    font-size:28px;
-    margin:20px;
-    color:#222;
-}
+/* PRODUCTOS (ARREGLADO 4 COLUMNAS) */
 
 .productos{
     display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    grid-template-columns:repeat(4, 1fr);
     gap:20px;
     padding:20px;
+    max-width:1400px;
+    margin:auto;
 }
+
+/* CARD */
 
 .card{
     background:white;
@@ -120,6 +118,9 @@ header{
     overflow:hidden;
     box-shadow:0 4px 12px rgba(0,0,0,0.15);
     transition:0.3s;
+    display:flex;
+    flex-direction:column;
+    height:100%;
 }
 
 .card:hover{
@@ -128,7 +129,7 @@ header{
 
 .card img{
     width:100%;
-    height:250px;
+    height:220px;
     object-fit:cover;
 }
 
@@ -214,10 +215,6 @@ header{
     cursor:pointer;
 }
 
-.comprar-btn:hover{
-    opacity:0.9;
-}
-
 /* FOOTER */
 
 footer{
@@ -228,7 +225,18 @@ footer{
     padding:20px;
 }
 
+/* RESPONSIVE */
+
+@media(max-width:1000px){
+    .productos{
+        grid-template-columns:repeat(2, 1fr);
+    }
+}
+
 @media(max-width:600px){
+    .productos{
+        grid-template-columns:repeat(1, 1fr);
+    }
 
     .banner{
         font-size:28px;
@@ -239,7 +247,6 @@ footer{
     .logo{
         font-size:22px;
     }
-
 }
 
 </style>
@@ -252,7 +259,7 @@ footer{
     <div class="logo-container">
 
         <img 
-        src="https://instagram.fgye1-1.fna.fbcdn.net/v/t51.82787-19/705381665_18073482155316223_846975219160882401_n.jpg?stp=dst-jpg_s150x150_tt6&efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLmRqYW5nby4xMDgwLmMyIn0&_nc_ht=instagram.fgye1-1.fna.fbcdn.net&_nc_cat=107&_nc_oc=Q6cZ2gGhMgLM4IAyvPNZ8AM_QOVeDLrClkifT5f_71s2P_VUPRtaZ6Nnyd9ougm1hQxAUsI3e1OxHukxZI48EZWZRtFd&_nc_ohc=H3P9x8HJvwUQ7kNvwHuQZeB&_nc_gid=zzoMjjth9o4nRt2fFzkpPg&edm=AP4sbd4BAAAA&ccb=7-5&oh=00_Af5Bk0xQVDg94w_tfI5ktDRvvNqlqGUoWKT04gfUrii5xg&oe=6A1AEFBF&_nc_sid=7a9f4b"
+        src="https://instagram.fgye1-1.fna.fbcdn.net/v/t51.82787-19/705381665_18073482155316223_846975219160882401_n.jpg"
         class="logo-img">
 
         <div class="logo">
@@ -273,25 +280,14 @@ footer{
 
 <div class="categorias">
 
-    <div class="categoria-btn">
-        🏋️ Ropa Deportiva
-    </div>
-
-    <div class="categoria-btn">
-        👟 Calzado
-    </div>
+    <div class="categoria-btn">🏋️ Ropa Deportiva</div>
+    <div class="categoria-btn">👟 Calzado</div>
 
 </div>
 
-<h2 class="section-title">
-🔥 Productos
-</h2>
+<h2 style="margin:20px;">🔥 Productos</h2>
 
-<!-- PRODUCTOS DESDE FIREBASE -->
-
-<div class="productos">
-
-</div>
+<div class="productos"></div>
 
 <!-- POPUP -->
 
@@ -302,31 +298,18 @@ footer{
         <span class="cerrar" onclick="cerrarPopup()">✖</span>
 
         <h2 id="productoTitulo"></h2>
-
         <p id="productoPrecio"></p>
 
         <hr style="margin:15px 0;">
 
         <h3>📞 Información de compra</h3>
 
-        <p>
-            📱 Teléfono: +593 99 161 3976
-        </p>
-
-        <p>
-            📸 Instagram: @entre_amigosssport
-        </p>
-
-        <p>
-            📍 Guayaquil, Ecuador
-        </p>
+        <p>📱 Teléfono: +593 99 161 3976</p>
+        <p>📸 Instagram: @entre_amigosssport</p>
+        <p>📍 Guayaquil, Ecuador</p>
 
         <a id="whatsappBtn" target="_blank">
-
-            <button class="comprar-btn">
-                Contactar por WhatsApp
-            </button>
-
+            <button class="comprar-btn">Contactar por WhatsApp</button>
         </a>
 
     </div>
@@ -337,40 +320,26 @@ footer{
     © 2026 ENTRE_AMIGOS SPORT | Tienda Online
 </footer>
 
-<!-- FIREBASE -->
-
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-
-import {
-getFirestore,
-collection,
-getDocs
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
-
   apiKey: "AIzaSyB2d2UkEVh32zmeAzeJUgFzRh8q23zJWso",
   authDomain: "entre-amigossssport.firebaseapp.com",
   projectId: "entre-amigossssport",
   storageBucket: "entre-amigossssport.firebasestorage.app",
   messagingSenderId: "73851257939",
-  appId: "1:73851257939:web:35ee80ea77a168eabe32a6",
-  measurementId: "G-JDC0XN85LV"
-
+  appId: "1:73851257939:web:35ee80ea77a168eabe32a6"
 };
 
 const app = initializeApp(firebaseConfig);
-
 const db = getFirestore(app);
-
-console.log("Firebase conectado 🔥");
 
 async function cargarProductos(){
 
     const contenedor = document.querySelector(".productos");
-
     contenedor.innerHTML = "";
 
     const querySnapshot = await getDocs(collection(db, "productos"));
@@ -380,24 +349,17 @@ async function cargarProductos(){
         const producto = doc.data();
 
         contenedor.innerHTML += `
-
         <div class="card">
 
             <img src="${producto.imagen}">
 
             <div class="info">
 
-                <div class="nombre">
-                    ${producto.nombre}
-                </div>
+                <div class="nombre">${producto.nombre}</div>
 
-                <div class="tallas-info">
-                    Categoria: ${producto.categoria}
-                </div>
+                <div class="tallas-info">Categoria: ${producto.categoria}</div>
 
-                <div class="precio">
-                    ${producto.precio}
-                </div>
+                <div class="precio">${producto.precio}</div>
 
                 <button class="btn"
                 onclick="mostrarInfo('${producto.nombre}','${producto.precio}')">
@@ -407,7 +369,6 @@ async function cargarProductos(){
             </div>
 
         </div>
-
         `;
 
     });
@@ -419,13 +380,10 @@ cargarProductos();
 function mostrarInfo(producto, precio){
 
     document.getElementById("popup").style.display = "flex";
-
     document.getElementById("productoTitulo").innerHTML = producto;
-
     document.getElementById("productoPrecio").innerHTML = "Precio: " + precio;
 
     let mensaje = "Hola, quiero comprar " + producto;
-
     let url = "https://wa.me/593991613976?text=" + encodeURIComponent(mensaje);
 
     document.getElementById("whatsappBtn").href = url;
@@ -434,9 +392,7 @@ function mostrarInfo(producto, precio){
 window.mostrarInfo = mostrarInfo;
 
 window.cerrarPopup = function(){
-
     document.getElementById("popup").style.display = "none";
-
 }
 
 </script>
