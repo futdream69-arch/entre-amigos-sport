@@ -5,8 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ENTRE_AMIGOS SPORT</title>
 
-<style>
+<!-- 🔥 ICONO DE LA PÁGINA (FAVICON) -->
+<link rel="icon" type="image/png" href="image_7e4e48.jpg">
 
+<style>
 *{
     margin:0;
     padding:0;
@@ -19,7 +21,6 @@ body{
 }
 
 /* HEADER */
-
 header{
     background:#ffcc00;
     padding:15px;
@@ -41,6 +42,7 @@ header{
     border-radius:50%;
     object-fit:cover;
     border:3px solid white;
+    background-color: #ffcc00;
 }
 
 .logo{
@@ -62,7 +64,6 @@ header{
 }
 
 /* BANNER */
-
 .banner{
     background:url('https://images.unsplash.com/photo-1512436991641-6745cdb1723f?q=80&w=1200&auto=format&fit=crop') center/cover;
     height:250px;
@@ -76,7 +77,6 @@ header{
 }
 
 /* CATEGORIAS */
-
 .categorias{
     display:flex;
     justify-content:center;
@@ -99,8 +99,7 @@ header{
     transform:scale(1.05);
 }
 
-/* PRODUCTOS (ARREGLADO 4 COLUMNAS) */
-
+/* PRODUCTOS */
 .productos{
     display:grid;
     grid-template-columns:repeat(4, 1fr);
@@ -111,7 +110,6 @@ header{
 }
 
 /* CARD */
-
 .card{
     background:white;
     border-radius:20px;
@@ -172,7 +170,6 @@ header{
 }
 
 /* POPUP */
-
 .popup{
     position:fixed;
     top:0;
@@ -216,7 +213,6 @@ header{
 }
 
 /* FOOTER */
-
 footer{
     margin-top:40px;
     background:#111;
@@ -226,7 +222,6 @@ footer{
 }
 
 /* RESPONSIVE */
-
 @media(max-width:1000px){
     .productos{
         grid-template-columns:repeat(2, 1fr);
@@ -248,30 +243,22 @@ footer{
         font-size:22px;
     }
 }
-
 </style>
 </head>
 
 <body>
 
 <header>
-
     <div class="logo-container">
-
-        <img 
-        src="https://instagram.fgye1-1.fna.fbcdn.net/v/t51.82787-19/705381665_18073482155316223_846975219160882401_n.jpg"
-        class="logo-img">
-
+        <img src="image_7e4e48.jpg" class="logo-img" alt="Logo Entre Amigos Sport">
         <div class="logo">
             ENTRE_AMIGOS SPORT
         </div>
-
     </div>
 
     <div class="search">
         <input type="text" placeholder="Buscar ropa o calzado...">
     </div>
-
 </header>
 
 <div class="banner">
@@ -279,41 +266,28 @@ footer{
 </div>
 
 <div class="categorias">
-
     <div class="categoria-btn">🏋️ Ropa Deportiva</div>
     <div class="categoria-btn">👟 Calzado</div>
-
 </div>
 
 <h2 style="margin:20px;">🔥 Productos</h2>
 
 <div class="productos"></div>
 
-<!-- POPUP -->
-
 <div class="popup" id="popup">
-
     <div class="popup-content">
-
         <span class="cerrar" onclick="cerrarPopup()">✖</span>
-
         <h2 id="productoTitulo"></h2>
         <p id="productoPrecio"></p>
-
         <hr style="margin:15px 0;">
-
         <h3>📞 Información de compra</h3>
-
         <p>📱 Teléfono: +593 99 161 3976</p>
         <p>📸 Instagram: @entre_amigosssport</p>
         <p>📍 Guayaquil, Ecuador</p>
-
         <a id="whatsappBtn" target="_blank">
             <button class="comprar-btn">Contactar por WhatsApp</button>
         </a>
-
     </div>
-
 </div>
 
 <footer>
@@ -321,7 +295,6 @@ footer{
 </footer>
 
 <script type="module">
-
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
@@ -338,63 +311,48 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 async function cargarProductos(){
-
     const contenedor = document.querySelector(".productos");
+    if(!contenedor) return;
     contenedor.innerHTML = "";
 
-    const querySnapshot = await getDocs(collection(db, "productos"));
-
-    querySnapshot.forEach((doc) => {
-
-        const producto = doc.data();
-
-        contenedor.innerHTML += `
-        <div class="card">
-
-            <img src="${producto.imagen}">
-
-            <div class="info">
-
-                <div class="nombre">${producto.nombre}</div>
-
-                <div class="tallas-info">Categoria: ${producto.categoria}</div>
-
-                <div class="precio">${producto.precio}</div>
-
-                <button class="btn"
-                onclick="mostrarInfo('${producto.nombre}','${producto.precio}')">
-                    Comprar
-                </button>
-
+    try {
+        const querySnapshot = await getDocs(collection(db, "productos"));
+        querySnapshot.forEach((doc) => {
+            const producto = doc.data();
+            contenedor.innerHTML += `
+            <div class="card">
+                <img src="${producto.imagen}">
+                <div class="info">
+                    <div class="nombre">${producto.nombre}</div>
+                    <div class="tallas-info">Categoria: ${producto.categoria}</div>
+                    <div class="precio">${producto.precio}</div>
+                    <button class="btn" onclick="mostrarInfo('${producto.nombre}','${producto.precio}')">
+                        Comprar
+                    </button>
+                </div>
             </div>
-
-        </div>
-        `;
-
-    });
-
+            `;
+        });
+    } catch (error) {
+        console.error("Error cargando productos:", error);
+    }
 }
 
 cargarProductos();
 
-function mostrarInfo(producto, precio){
-
+window.mostrarInfo = function(producto, precio){
     document.getElementById("popup").style.display = "flex";
     document.getElementById("productoTitulo").innerHTML = producto;
     document.getElementById("productoPrecio").innerHTML = "Precio: " + precio;
 
     let mensaje = "Hola, quiero comprar " + producto;
     let url = "https://wa.me/593991613976?text=" + encodeURIComponent(mensaje);
-
     document.getElementById("whatsappBtn").href = url;
 }
-
-window.mostrarInfo = mostrarInfo;
 
 window.cerrarPopup = function(){
     document.getElementById("popup").style.display = "none";
 }
-
 </script>
 
 </body>
