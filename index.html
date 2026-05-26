@@ -71,6 +71,7 @@ header{
     border-radius:20px;
     overflow:hidden;
     box-shadow:0 4px 12px rgba(0,0,0,0.15);
+    position:relative;
 }
 
 .card img{
@@ -99,6 +100,24 @@ header{
     background:#ffcc00;
     border-radius:10px;
     cursor:pointer;
+}
+
+/* ❤️ FAVORITO */
+.fav-btn{
+    position:absolute;
+    top:10px;
+    right:10px;
+    background:white;
+    border:none;
+    font-size:22px;
+    border-radius:50%;
+    width:40px;
+    height:40px;
+    cursor:pointer;
+}
+
+.fav-activo{
+    color:red;
 }
 
 /* POPUP */
@@ -187,14 +206,48 @@ const db = getFirestore(app);
 
 let todosLosProductos = [];
 
-/* 🔥 RENDER CENTRAL */
+/* ❤️ FAVORITOS */
+function getFavoritos(){
+    return JSON.parse(localStorage.getItem("favoritos")) || [];
+}
+
+function guardarFavoritos(favs){
+    localStorage.setItem("favoritos", JSON.stringify(favs));
+}
+
+window.toggleFavorito = function(id, nombre, imagen){
+    let favs = getFavoritos();
+
+    let existe = favs.find(p => p.id === id);
+
+    if(existe){
+        favs = favs.filter(p => p.id !== id);
+    } else {
+        favs.push({id, nombre, imagen});
+    }
+
+    guardarFavoritos(favs);
+    mostrarProductos(todosLosProductos);
+}
+
+/* 🔥 RENDER */
 function mostrarProductos(lista){
     const contenedor = document.querySelector(".productos");
     contenedor.innerHTML = "";
 
+    let favs = getFavoritos();
+
     lista.forEach((p) => {
+
+        let activo = favs.find(f => f.id === p.id);
+
         contenedor.innerHTML += `
         <div class="card">
+            <button class="fav-btn ${activo ? 'fav-activo' : ''}"
+                onclick="toggleFavorito('${p.id}','${p.nombre}','${p.imagen}')">
+                ❤️
+            </button>
+
             <img src="${p.imagen}">
             <div class="info">
                 <div class="nombre">${p.nombre}</div>
@@ -208,7 +261,7 @@ function mostrarProductos(lista){
     });
 }
 
-/* 🔥 CARGAR PRODUCTOS */
+/* 🔥 CARGAR */
 async function cargarProductos(){
     const querySnapshot = await getDocs(collection(db, "productos"));
 
@@ -216,7 +269,10 @@ async function cargarProductos(){
 
     querySnapshot.forEach((doc) => {
         const p = doc.data();
-        todosLosProductos.push(p);
+        todosLosProductos.push({
+            id: doc.id,
+            ...p
+        });
     });
 
     mostrarProductos(todosLosProductos);
@@ -224,7 +280,7 @@ async function cargarProductos(){
 
 cargarProductos();
 
-/* 🔥 BUSCADOR ARREGLADO */
+/* BUSCADOR */
 const buscador = document.getElementById("buscador");
 
 buscador.addEventListener("input", () => {
