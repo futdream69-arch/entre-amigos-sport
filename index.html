@@ -102,24 +102,6 @@ header{
     cursor:pointer;
 }
 
-/* ❤️ FAVORITO */
-.fav-btn{
-    position:absolute;
-    top:10px;
-    right:10px;
-    background:white;
-    border:none;
-    font-size:22px;
-    border-radius:50%;
-    width:40px;
-    height:40px;
-    cursor:pointer;
-}
-
-.fav-activo{
-    color:red;
-}
-
 /* POPUP */
 .popup{
     position:fixed;
@@ -206,53 +188,19 @@ const db = getFirestore(app);
 
 let todosLosProductos = [];
 
-/* ❤️ FAVORITOS */
-function getFavoritos(){
-    return JSON.parse(localStorage.getItem("favoritos")) || [];
-}
-
-function guardarFavoritos(favs){
-    localStorage.setItem("favoritos", JSON.stringify(favs));
-}
-
-window.toggleFavorito = function(id, nombre, imagen){
-    let favs = getFavoritos();
-
-    let existe = favs.find(p => p.id === id);
-
-    if(existe){
-        favs = favs.filter(p => p.id !== id);
-    } else {
-        favs.push({id, nombre, imagen});
-    }
-
-    guardarFavoritos(favs);
-    mostrarProductos(todosLosProductos);
-}
-
-/* 🔥 RENDER */
+/* RENDER */
 function mostrarProductos(lista){
     const contenedor = document.querySelector(".productos");
     contenedor.innerHTML = "";
 
-    let favs = getFavoritos();
-
     lista.forEach((p) => {
-
-        let activo = favs.find(f => f.id === p.id);
-
         contenedor.innerHTML += `
         <div class="card">
-            <button class="fav-btn ${activo ? 'fav-activo' : ''}"
-                onclick="toggleFavorito('${p.id}','${p.nombre}','${p.imagen}')">
-                ❤️
-            </button>
-
             <img src="${p.imagen}">
             <div class="info">
                 <div class="nombre">${p.nombre}</div>
                 <div class="precio">${p.precio}</div>
-                <button class="btn" onclick="mostrarInfo('${p.nombre}','${p.precio}')">
+                <button class="btn" onclick="mostrarInfo('${p.nombre}','${p.precio}','${p.imagen}')">
                     Comprar
                 </button>
             </div>
@@ -261,7 +209,7 @@ function mostrarProductos(lista){
     });
 }
 
-/* 🔥 CARGAR */
+/* CARGAR */
 async function cargarProductos(){
     const querySnapshot = await getDocs(collection(db, "productos"));
 
@@ -294,13 +242,23 @@ buscador.addEventListener("input", () => {
     mostrarProductos(filtrados);
 });
 
-/* POPUP */
-window.mostrarInfo = function(nombre, precio){
+/* POPUP + WHATSAPP PRO */
+window.mostrarInfo = function(nombre, precio, imagen){
     document.getElementById("popup").style.display = "flex";
     document.getElementById("productoTitulo").innerHTML = nombre;
     document.getElementById("productoPrecio").innerHTML = precio;
 
-    let url = "https://wa.me/593991613976?text=Quiero comprar " + nombre;
+    let mensaje = 
+`Hola 👋 quiero hacer un pedido:
+
+🛍️ Producto: ${nombre}
+💰 Precio: ${precio}
+🖼️ Imagen: ${imagen}
+
+¿Está disponible?`;
+
+    let url = "https://wa.me/593991613976?text=" + encodeURIComponent(mensaje);
+
     document.getElementById("whatsappBtn").href = url;
 }
 
