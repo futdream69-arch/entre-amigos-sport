@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ENTRE_AMIGOS SPORT</title>
 
-<!-- 🔥 ICONO DE LA PÁGINA (FAVICON) -->
 <link rel="icon" type="image/png" href="image_7e4e48.jpg">
 
 <style>
@@ -42,7 +41,7 @@ header{
     border-radius:50%;
     object-fit:cover;
     border:3px solid white;
-    background-color: #ffcc00;
+    background-color:#ffcc00;
 }
 
 .logo{
@@ -91,12 +90,6 @@ header{
     border-radius:30px;
     font-weight:bold;
     cursor:pointer;
-    transition:0.3s;
-}
-
-.categoria-btn:hover{
-    background:#ffaa00;
-    transform:scale(1.05);
 }
 
 /* PRODUCTOS */
@@ -115,14 +108,6 @@ header{
     border-radius:20px;
     overflow:hidden;
     box-shadow:0 4px 12px rgba(0,0,0,0.15);
-    transition:0.3s;
-    display:flex;
-    flex-direction:column;
-    height:100%;
-}
-
-.card:hover{
-    transform:translateY(-5px);
 }
 
 .card img{
@@ -138,13 +123,11 @@ header{
 .nombre{
     font-size:18px;
     font-weight:bold;
-    margin-bottom:5px;
 }
 
 .tallas-info{
     font-size:14px;
     color:#666;
-    margin-bottom:10px;
 }
 
 .precio{
@@ -154,19 +137,12 @@ header{
 }
 
 .btn{
-    margin-top:15px;
     width:100%;
-    padding:12px;
+    padding:10px;
     border:none;
-    border-radius:10px;
     background:#ffcc00;
-    font-weight:bold;
+    border-radius:10px;
     cursor:pointer;
-    transition:0.3s;
-}
-
-.btn:hover{
-    background:#ffaa00;
 }
 
 /* POPUP */
@@ -196,52 +172,15 @@ header{
     float:right;
     cursor:pointer;
     font-size:22px;
-    font-weight:bold;
-}
-
-.comprar-btn{
-    margin-top:20px;
-    width:100%;
-    padding:14px;
-    border:none;
-    border-radius:12px;
-    background:#25D366;
-    color:white;
-    font-size:16px;
-    font-weight:bold;
-    cursor:pointer;
-}
-
-/* FOOTER */
-footer{
-    margin-top:40px;
-    background:#111;
-    color:white;
-    text-align:center;
-    padding:20px;
 }
 
 /* RESPONSIVE */
 @media(max-width:1000px){
-    .productos{
-        grid-template-columns:repeat(2, 1fr);
-    }
+    .productos{ grid-template-columns:repeat(2,1fr); }
 }
 
 @media(max-width:600px){
-    .productos{
-        grid-template-columns:repeat(1, 1fr);
-    }
-
-    .banner{
-        font-size:28px;
-        text-align:center;
-        padding:20px;
-    }
-
-    .logo{
-        font-size:22px;
-    }
+    .productos{ grid-template-columns:repeat(1,1fr); }
 }
 </style>
 </head>
@@ -250,20 +189,17 @@ footer{
 
 <header>
     <div class="logo-container">
-        <img src="image_7e4e48.jpg" class="logo-img" alt="Logo Entre Amigos Sport">
-        <div class="logo">
-            ENTRE_AMIGOS SPORT
-        </div>
+        <img src="image_7e4e48.jpg" class="logo-img">
+        <div class="logo">ENTRE_AMIGOS SPORT</div>
     </div>
 
+    <!-- 🔥 BUSCADOR FUNCIONANDO -->
     <div class="search">
-        <input type="text" placeholder="Buscar ropa o calzado...">
+        <input type="text" id="buscador" placeholder="Buscar ropa o calzado...">
     </div>
 </header>
 
-<div class="banner">
-    OFERTAS SPORT 🔥
-</div>
+<div class="banner">OFERTAS SPORT 🔥</div>
 
 <div class="categorias">
     <div class="categoria-btn">🏋️ Ropa Deportiva</div>
@@ -274,25 +210,19 @@ footer{
 
 <div class="productos"></div>
 
+<!-- POPUP -->
 <div class="popup" id="popup">
     <div class="popup-content">
         <span class="cerrar" onclick="cerrarPopup()">✖</span>
         <h2 id="productoTitulo"></h2>
         <p id="productoPrecio"></p>
-        <hr style="margin:15px 0;">
-        <h3>📞 Información de compra</h3>
-        <p>📱 Teléfono: +593 99 161 3976</p>
-        <p>📸 Instagram: @entre_amigosssport</p>
-        <p>📍 Guayaquil, Ecuador</p>
+        <hr>
+        <p>📱 WhatsApp disponible</p>
         <a id="whatsappBtn" target="_blank">
-            <button class="comprar-btn">Contactar por WhatsApp</button>
+            <button>Comprar</button>
         </a>
     </div>
 </div>
-
-<footer>
-    © 2026 ENTRE_AMIGOS SPORT | Tienda Online
-</footer>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -310,43 +240,75 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
+let todosLosProductos = [];
+
+/* 🔥 CARGAR PRODUCTOS */
 async function cargarProductos(){
     const contenedor = document.querySelector(".productos");
-    if(!contenedor) return;
     contenedor.innerHTML = "";
 
-    try {
-        const querySnapshot = await getDocs(collection(db, "productos"));
-        querySnapshot.forEach((doc) => {
-            const producto = doc.data();
-            contenedor.innerHTML += `
-            <div class="card">
-                <img src="${producto.imagen}">
-                <div class="info">
-                    <div class="nombre">${producto.nombre}</div>
-                    <div class="tallas-info">Categoria: ${producto.categoria}</div>
-                    <div class="precio">${producto.precio}</div>
-                    <button class="btn" onclick="mostrarInfo('${producto.nombre}','${producto.precio}')">
-                        Comprar
-                    </button>
-                </div>
+    const querySnapshot = await getDocs(collection(db, "productos"));
+
+    todosLosProductos = [];
+
+    querySnapshot.forEach((doc) => {
+        const p = doc.data();
+        todosLosProductos.push(p);
+
+        contenedor.innerHTML += `
+        <div class="card">
+            <img src="${p.imagen}">
+            <div class="info">
+                <div class="nombre">${p.nombre}</div>
+                <div class="precio">${p.precio}</div>
+                <button class="btn" onclick="mostrarInfo('${p.nombre}','${p.precio}')">
+                    Comprar
+                </button>
             </div>
-            `;
-        });
-    } catch (error) {
-        console.error("Error cargando productos:", error);
-    }
+        </div>
+        `;
+    });
 }
 
 cargarProductos();
 
-window.mostrarInfo = function(producto, precio){
-    document.getElementById("popup").style.display = "flex";
-    document.getElementById("productoTitulo").innerHTML = producto;
-    document.getElementById("productoPrecio").innerHTML = "Precio: " + precio;
+/* 🔥 BUSCADOR FUNCIONAL */
+const buscador = document.getElementById("buscador");
 
-    let mensaje = "Hola, quiero comprar " + producto;
-    let url = "https://wa.me/593991613976?text=" + encodeURIComponent(mensaje);
+buscador.addEventListener("input", (e) => {
+    const texto = e.target.value.toLowerCase();
+
+    const filtrados = todosLosProductos.filter(p =>
+        p.nombre.toLowerCase().includes(texto) ||
+        p.categoria.toLowerCase().includes(texto)
+    );
+
+    const contenedor = document.querySelector(".productos");
+    contenedor.innerHTML = "";
+
+    filtrados.forEach((p) => {
+        contenedor.innerHTML += `
+        <div class="card">
+            <img src="${p.imagen}">
+            <div class="info">
+                <div class="nombre">${p.nombre}</div>
+                <div class="precio">${p.precio}</div>
+                <button class="btn" onclick="mostrarInfo('${p.nombre}','${p.precio}')">
+                    Comprar
+                </button>
+            </div>
+        </div>
+        `;
+    });
+});
+
+/* POPUP */
+window.mostrarInfo = function(nombre, precio){
+    document.getElementById("popup").style.display = "flex";
+    document.getElementById("productoTitulo").innerHTML = nombre;
+    document.getElementById("productoPrecio").innerHTML = precio;
+
+    let url = "https://wa.me/593991613976?text=Quiero%20comprar%20" + nombre;
     document.getElementById("whatsappBtn").href = url;
 }
 
