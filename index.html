@@ -125,6 +125,12 @@ header{
 .nombre{
     font-size:18px;
     font-weight:bold;
+    margin-bottom:5px;
+}
+
+.tallas-info{
+    font-size:14px;
+    color:#666;
     margin-bottom:10px;
 }
 
@@ -150,16 +156,6 @@ header{
     background:#ffaa00;
 }
 
-/* FOOTER */
-
-footer{
-    margin-top:40px;
-    background:#111;
-    color:white;
-    text-align:center;
-    padding:20px;
-}
-
 /* POPUP */
 
 .popup{
@@ -182,19 +178,6 @@ footer{
     border-radius:20px;
     padding:25px;
     text-align:center;
-    animation:aparecer 0.3s ease;
-}
-
-@keyframes aparecer{
-    from{
-        transform:scale(0.7);
-        opacity:0;
-    }
-
-    to{
-        transform:scale(1);
-        opacity:1;
-    }
 }
 
 .cerrar{
@@ -219,6 +202,16 @@ footer{
 
 .comprar-btn:hover{
     opacity:0.9;
+}
+
+/* FOOTER */
+
+footer{
+    margin-top:40px;
+    background:#111;
+    color:white;
+    text-align:center;
+    padding:20px;
 }
 
 @media(max-width:600px){
@@ -255,188 +248,22 @@ footer{
 <div class="categorias">
 
     <div class="categoria-btn">
-        Ropa Deportiva
+        🏋️ Ropa Deportiva
     </div>
 
     <div class="categoria-btn">
-        Calzado
+        👟 Calzado
     </div>
 
 </div>
 
-<!-- ROPA -->
-
 <h2 class="section-title">
-🏋️ Ropa Deportiva
+🔥 Productos
 </h2>
 
-<div class="productos">
-
-    <div class="card">
-
-        <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?q=80&w=800&auto=format&fit=crop">
-
-        <div class="info">
-
-            <div class="nombre">
-                Conjunto Deportivo
-            </div>
-
-            <div class="precio">
-                $25.99
-            </div>
-
-            <button class="btn"
-            onclick="mostrarInfo(
-            'Conjunto Deportivo',
-            '$25.99'
-            )">
-            Comprar
-            </button>
-
-        </div>
-
-    </div>
-
-    <div class="card">
-
-        <img src="https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?q=80&w=800&auto=format&fit=crop">
-
-        <div class="info">
-
-            <div class="nombre">
-                Camiseta Nike
-            </div>
-
-            <div class="precio">
-                $18.50
-            </div>
-
-            <button class="btn"
-            onclick="mostrarInfo(
-            'Camiseta Nike',
-            '$18.50'
-            )">
-            Comprar
-            </button>
-
-        </div>
-
-    </div>
-
-    <div class="card">
-
-        <img src="https://images.unsplash.com/photo-1521572267360-ee0c2909d518?q=80&w=800&auto=format&fit=crop">
-
-        <div class="info">
-
-            <div class="nombre">
-                Short Deportivo
-            </div>
-
-            <div class="precio">
-                $14.99
-            </div>
-
-            <button class="btn"
-            onclick="mostrarInfo(
-            'Short Deportivo',
-            '$14.99'
-            )">
-            Comprar
-            </button>
-
-        </div>
-
-    </div>
-
-</div>
-
-<!-- CALZADO -->
-
-<h2 class="section-title">
-👟 Calzado
-</h2>
+<!-- PRODUCTOS FIREBASE -->
 
 <div class="productos">
-
-    <div class="card">
-
-        <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=800&auto=format&fit=crop">
-
-        <div class="info">
-
-            <div class="nombre">
-                Nike Air Max
-            </div>
-
-            <div class="precio">
-                $75.00
-            </div>
-
-            <button class="btn"
-            onclick="mostrarInfo(
-            'Nike Air Max',
-            '$75.00'
-            )">
-            Comprar
-            </button>
-
-        </div>
-
-    </div>
-
-    <div class="card">
-
-        <img src="https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?q=80&w=800&auto=format&fit=crop">
-
-        <div class="info">
-
-            <div class="nombre">
-                Adidas Running
-            </div>
-
-            <div class="precio">
-                $68.99
-            </div>
-
-            <button class="btn"
-            onclick="mostrarInfo(
-            'Adidas Running',
-            '$68.99'
-            )">
-            Comprar
-            </button>
-
-        </div>
-
-    </div>
-
-    <div class="card">
-
-        <img src="https://images.unsplash.com/photo-1543508282-6319a3e2621f?q=80&w=800&auto=format&fit=crop">
-
-        <div class="info">
-
-            <div class="nombre">
-                Puma Sport
-            </div>
-
-            <div class="precio">
-                $59.99
-            </div>
-
-            <button class="btn"
-            onclick="mostrarInfo(
-            'Puma Sport',
-            '$59.99'
-            )">
-            Comprar
-            </button>
-
-        </div>
-
-    </div>
 
 </div>
 
@@ -484,7 +311,84 @@ footer{
     © 2026 ENTRE_AMIGOS SPORT | Tienda Online
 </footer>
 
-<script>
+<!-- FIREBASE -->
+
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+import {
+getFirestore,
+collection,
+getDocs
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+
+  apiKey: "AIzaSyB2d2UkEVh32zmeAzeJUgFzRh8q23zJWso",
+  authDomain: "entre-amigossssport.firebaseapp.com",
+  projectId: "entre-amigossssport",
+  storageBucket: "entre-amigossssport.firebasestorage.app",
+  messagingSenderId: "73851257939",
+  appId: "1:73851257939:web:35ee80ea77a168eabe32a6",
+  measurementId: "G-JDC0XN85LV"
+
+};
+
+const app = initializeApp(firebaseConfig);
+
+const db = getFirestore(app);
+
+console.log("Firebase conectado 🔥");
+
+async function cargarProductos(){
+
+    const contenedor = document.querySelector(".productos");
+
+    contenedor.innerHTML = "";
+
+    const querySnapshot = await getDocs(collection(db, "productos"));
+
+    querySnapshot.forEach((doc) => {
+
+        const producto = doc.data();
+
+        contenedor.innerHTML += `
+
+        <div class="card">
+
+            <img src="${producto.imagen}">
+
+            <div class="info">
+
+                <div class="nombre">
+                    ${producto.nombre}
+                </div>
+
+                <div class="tallas-info">
+                    Categoria: ${producto.categoria}
+                </div>
+
+                <div class="precio">
+                    ${producto.precio}
+                </div>
+
+                <button class="btn"
+                onclick="mostrarInfo('${producto.nombre}','${producto.precio}')">
+                    Comprar
+                </button>
+
+            </div>
+
+        </div>
+
+        `;
+
+    });
+
+}
+
+cargarProductos();
 
 function mostrarInfo(producto, precio){
 
@@ -501,7 +405,9 @@ function mostrarInfo(producto, precio){
     document.getElementById("whatsappBtn").href = url;
 }
 
-function cerrarPopup(){
+window.mostrarInfo = mostrarInfo;
+
+window.cerrarPopup = function(){
 
     document.getElementById("popup").style.display = "none";
 
